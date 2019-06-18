@@ -15,7 +15,7 @@ type AuthController struct {
 
 type user struct {
 	Username string `valid:"Required;Email;MaxSize(100)"`
-	Password string `valid:MaxSize(100)`
+	Password string `valid:"MaxSize(100)"`
 }
 
 func (u *user) Valid(v *validation.Validation) {
