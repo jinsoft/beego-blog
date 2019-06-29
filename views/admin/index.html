@@ -62,7 +62,7 @@
                 </li>
                 <li class="layui-nav-item" lay-unselect>
                     <a href="javascript:;">
-                        <cite>贤心</cite>
+                        <cite>{{ .username }}</cite>
                     </a>
                     <dl class="layui-nav-child">
                         <dd><a lay-href="set/user/info.html">基本资料</a></dd>
@@ -384,11 +384,14 @@
                             <cite>用户管理</cite>
                         </a>
                         <dl class="layui-nav-child">
-                            <dd>
+                            <dd class="layui-this">
+                                <a lay-href="/admin/user/index">网站用户</a>
+                            </dd>
+                            <dd class="">
                                 <a lay-href="user/administrators/list.html">后台管理员</a>
                             </dd>
-                            <dd>
-                                <a lay-href="user/user/list.html">网站用户</a>
+                            <dd class="">
+                                <a lay-href="user/administrators/role.html">角色管理</a>
                             </dd>
                         </dl>
                     </li>

@@ -34,6 +34,7 @@ func (c *AuthController) Login() {
 	}
 	if u.Name == "admin" && u.Password == "123456" {
 		c.uid = 1
+		c.SetSession("user", u)
 		c.Data["json"] = map[string]interface{}{"code": 200, "message": "登录成功", "url": "/admin"}
 		//c.Redirect("/admin", 302)
 	} else {
