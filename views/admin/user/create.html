@@ -24,8 +24,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">头像</label>
         <div class="layui-input-inline">
-            <input type="text" name="avatar" lay-verify="required" placeholder="请上传图片" autocomplete="off"
-                   class="layui-input">
+            <input type="text" name="avatar" lay-verify="required" placeholder="" autocomplete="off"
+                   class="layui-input" disabled>
         </div>
         <button style="float: left;" type="button" class="layui-btn" id="upload_image">上传图片</button>
     </div>
@@ -59,6 +59,7 @@
             , data: {type: "avatar"}
             , done: function (res) {
                 $(this.item).prev("div").children("input").val(res.data.src)
+                $(this.item).prev("div").append('<img src="'+ res.data.src +'" alt="头像" class="layui-upload-img">')
             }
             ,error:function (res) {
                 console.log(res)
