@@ -3,12 +3,14 @@ package admin
 import (
 	"github.com/astaxie/beego"
 	"net"
+	"strconv"
 	"strings"
+	"web/models"
 )
 
 type baseController struct {
 	beego.Controller
-	uid            int64
+	userid         int64
 	username       string
 	moduleName     string
 	controllerName string
@@ -27,9 +29,25 @@ func (c *baseController) Prepare() {
 }
 
 func (c *baseController) auth() {
-	//if c.uid == 0 && c.actionName != "showloginform" && c.actionName != "login" {
-	//	c.Redirect("/", 302)
-	//}
+	arr := strings.Split(c.Ctx.GetCookie("ainiok_session"), "|")
+	if len(arr) == 2 {
+		idstr, password := arr[0], arr[1]
+		usersid, _ := strconv.ParseInt(idstr, 10, 0)
+		if usersid > 0 {
+			var admin models.Admin
+			admin.Id = usersid
+			if admin.Read() == nil && password == models.Md5([]byte(c.getClientIp()+"|"+admin.Password)) {
+				c.userid = admin.Id
+				c.username = admin.Name
+				if c.actionName == "showloginform" {
+					c.Redirect("/admin", 302)
+				}
+			}
+		}
+	}
+	if c.userid == 0 && c.actionName != "showloginform" && c.actionName != "login" {
+		c.Redirect("/admin/login", 302)
+	}
 }
 
 func (c *baseController) display(tpl ...string) {

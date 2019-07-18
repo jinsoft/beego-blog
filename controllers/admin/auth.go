@@ -1,7 +1,9 @@
 package admin
 
 import (
-	"github.com/astaxie/beego/validation"
+	"strconv"
+	"strings"
+	"web/models"
 )
 
 type User struct {
@@ -13,32 +15,32 @@ type AuthController struct {
 	baseController
 }
 
-type user struct {
-	Username string `valid:"Required;Email;MaxSize(100)"`
-	Password string `valid:"MaxSize(100)"`
-}
-
-func (u *user) Valid(v *validation.Validation) {
-	//
-}
-
+// 登录页
 func (c *AuthController) ShowLoginForm() {
 	c.Data["xsrfdata"] = c.XSRFToken()
 	c.TplName = "admin/login.tpl"
 }
 
+// 处理登录请求
 func (c *AuthController) Login() {
-	u := User{}
-	if err := c.ParseForm(&u); err != nil {
-		c.Ctx.WriteString("error")
-	}
-	if u.Name == "admin" && u.Password == "123456" {
-		c.uid = 1
-		c.SetSession("user", u)
-		c.Data["json"] = map[string]interface{}{"code": 200, "message": "登录成功", "url": "/admin"}
-		//c.Redirect("/admin", 302)
-	} else {
-		c.Data["json"] = map[string]interface{}{"code": 401, "message": "登录失败"}
+	email := strings.TrimSpace(c.GetString("email"))
+	password := strings.TrimSpace(c.GetString("password"))
+	if email != "" && password != "" {
+		var admin models.Admin
+		admin.Email = email
+		//admin.Email = email
+		if admin.Read("email") != nil || admin.Password != models.Md5([]byte(password)) {
+			c.Data["json"] = map[string]interface{}{"code": 401, "message": "帐号或密码错误"}
+		} else {
+			authkey := models.Md5([]byte(c.getClientIp() + "|" + admin.Password))
+			c.Ctx.SetCookie("ainiok_session", strconv.FormatInt(admin.Id, 10)+"|"+authkey)
+			//c.Redirect("/admin", 302)
+			c.Data["json"] = map[string]interface{}{"code": 200, "message": "登录成功", "url": "/admin"}
+		}
+	} else if email == "" {
+		c.Data["json"] = map[string]interface{}{"code": 401, "message": "邮箱不能为空"}
+	} else if password == "" {
+		c.Data["json"] = map[string]interface{}{"code": 401, "message": "密码不能为空"}
 	}
 	c.ServeJSON()
 }

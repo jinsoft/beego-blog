@@ -35,3 +35,9 @@ func Md5Signer(message string) string {
 	hash := md5.Sum(data)
 	return fmt.Sprintf("%x", hash)
 }
+
+func Md5(buf []byte) string {
+	hash := md5.New()
+	hash.Write(buf)
+	return fmt.Sprintf("%x", hash.Sum(nil))
+}
