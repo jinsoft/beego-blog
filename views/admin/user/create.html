@@ -3,7 +3,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">用户名</label>
         <div class="layui-input-inline">
-            <input type="text" name="username" lay-verify="required" placeholder="请输入用户名" autocomplete="off"
+            <input type="text" name="username" value="{{.input.username}}" lay-verify="required" placeholder="请输入用户名" autocomplete="off"
                    class="layui-input">
         </div>
     </div>
@@ -56,7 +56,7 @@
             , url: '/admin/upload'
             , accept: 'images'
             , acceptMime: 'image/*'
-            , data: {type: "avatar"}
+            , data: {type: "avatar", _xsrf:{{ .xsrf_token}}}
             , done: function (res) {
                 $(this.item).prev("div").children("input").val(res.data.src)
                 $(this.item).prev("div").append('<img src="'+ res.data.src +'" alt="头像" class="layui-upload-img">')

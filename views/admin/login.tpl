@@ -82,7 +82,7 @@
 
         form.on('submit(LAY-user-login-submit)', function (obj) {
             var data = obj.field;
-            data._xsrf = {{ .xsrfdata}}
+            data._xsrf = {{ .xsrf_token }}
                 $.ajax({
                     url: "/admin/login",
                     data: data,

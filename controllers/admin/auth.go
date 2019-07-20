@@ -17,7 +17,7 @@ type AuthController struct {
 
 // 登录页
 func (c *AuthController) ShowLoginForm() {
-	c.Data["xsrfdata"] = c.XSRFToken()
+	c.Data["xsrf_token"] = c.XSRFToken()
 	c.TplName = "admin/login.tpl"
 }
 

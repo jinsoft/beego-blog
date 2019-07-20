@@ -29,6 +29,9 @@ func (c *UserController) Index() {
 }
 
 func (c *UserController) Create() {
+	c.Data["xsrf_token"] = c.XSRFToken()
+	input := make(map[string]string)
+	c.Data["input"] = input
 	c.display()
 }
 
