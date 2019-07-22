@@ -1,4 +1,4 @@
-{{template "admin/layout/header.html"}}
+{{gtemplate "admin/layout/header.html"}}
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
 
@@ -223,7 +223,7 @@
                         <div class="layui-card-body">
                             <div class="layui-tab-content">
                                 <div class="layui-tab-item layui-show">
-                                    <table id="LAY-index-prograss"></table>
+{{/*                                    <table id="LAY-index-prograss"></table>*/}}
                                 </div>
                             </div>
                         </div>
@@ -306,4 +306,4 @@
     }).use(['index', 'sample']);
 </script>
 
-{{template "admin/layout/footer.html"}}
+{{gtemplate "admin/layout/footer.html"}}

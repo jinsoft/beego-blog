@@ -26,7 +26,7 @@ func (c *AuthController) Login() {
 	email := strings.TrimSpace(c.GetString("email"))
 	password := strings.TrimSpace(c.GetString("password"))
 	if email != "" && password != "" {
-		var admin models.Admin
+		var admin models.Admins
 		admin.Email = email
 		//admin.Email = email
 		if admin.Read("email") != nil || admin.Password != models.Md5([]byte(password)) {

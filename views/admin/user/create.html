@@ -3,21 +3,21 @@
     <div class="layui-form-item">
         <label class="layui-form-label">用户名</label>
         <div class="layui-input-inline">
-            <input type="text" name="username" value="{{.input.username}}" lay-verify="required" placeholder="请输入用户名" autocomplete="off"
-                   class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">手机号码</label>
-        <div class="layui-input-inline">
-            <input type="text" name="phone" lay-verify="phone" placeholder="请输入号码" autocomplete="off"
+            <input type="text" name="name" value="{{.input.name}}" lay-verify="required" placeholder="请输入用户名" autocomplete="off"
                    class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">邮箱</label>
         <div class="layui-input-inline">
-            <input type="text" name="email" lay-verify="email" placeholder="请输入邮箱" autocomplete="off"
+            <input type="text" name="email" lay-verify="email" lay-verify="required" placeholder="请输入邮箱" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">手机号码</label>
+        <div class="layui-input-inline">
+            <input type="text" name="phone" lay-verify="phone" lay-verify="required" placeholder="请输入号码" autocomplete="off"
                    class="layui-input">
         </div>
     </div>

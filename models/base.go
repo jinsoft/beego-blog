@@ -20,10 +20,12 @@ func init() {
 	}
 
 	// username:password@protocol(address)/dbname?param=value
-	db_url := db_username + ":" + db_password + "@tcp(" + db_host + ":" + db_port + ")/" + db_databases + "?charset=utf8"
+	db_url := db_username + ":" + db_password + "@tcp(" + db_host + ":" + db_port + ")/" + db_databases + "?charset=utf8&loc=Asia%2FShanghai"
 	orm.RegisterDataBase("default", "mysql", db_url)
 
-	orm.RegisterModel(new(User), new(Admin))
+	orm.RegisterModel(new(Users), new(Admins))
+	//orm.RegisterModelWithPrefix(beego.AppConfig.String("DB_PREFIX"),
+	//	new(Users), new(Admins))
 
 	// 开发环境开启debug
 	if beego.AppConfig.String("runmode") == "dev" {

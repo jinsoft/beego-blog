@@ -4,7 +4,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-type Admin struct {
+type Admins struct {
 	Id       int64
 	Uid      string `org:"size(32)"`
 	Name     string `org:"size(128)"`
@@ -12,13 +12,13 @@ type Admin struct {
 	Password string `orm:"size(64)"`
 }
 
-func (m *Admin) Read(fields ...string) error {
+func (m *Admins) Read(fields ...string) error {
 	if err := orm.NewOrm().Read(m, fields...); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m *Admin) TableName() string {
+func (m *Admins) TableName() string {
 	return TableName("admins")
 }
