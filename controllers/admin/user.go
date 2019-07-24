@@ -1,8 +1,11 @@
 package admin
 
 import (
+	"html/template"
 	"strings"
+	"time"
 	"web/models"
+	"web/util"
 )
 
 type UserController struct {
@@ -73,9 +76,33 @@ func (c *UserController) Index() {
 }
 
 func (c *UserController) Create() {
+	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
+	if c.IsAjax() {
+		User := new(models.Users)
+		User.Uid = util.GUID()
+		User.Name = strings.TrimSpace(c.GetString("name"))
+		User.Phone = strings.TrimSpace(c.GetString("phone"))
+		User.Email = strings.TrimSpace(c.GetString("email"))
+		User.Avatar = strings.TrimSpace(c.GetString("avatar"))
+		//User.Password =strings.TrimSpace(c.GetString("password"))
+		_, err := models.GetUserByEmail(User.Email)
+
+		if err == nil {
+			c.ajaxMsg("邮箱已存在", MSG_ERR)
+		}
+		pwd := strings.TrimSpace(c.GetString("passwrod"))
+		User.Password = models.Md5([]byte(pwd))
+		User.CreatedTime = time.Now()
+		if _, err := models.UserAdd(User); err != nil {
+			c.ajaxMsg(err.Error(), MSG_ERR)
+		}
+		c.ajaxMsg("添加成功", MSG_OK)
+	}
+	c.display()
+}
+
+func (c UserController) Edit() {
 	c.Data["xsrf_token"] = c.XSRFToken()
-	input := make(map[string]string)
-	c.Data["input"] = input
 	c.display()
 }
 

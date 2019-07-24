@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-user-front-search">
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="search">
                         <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                     </button>
                 </div>
@@ -40,7 +40,7 @@
 
         <div class="layui-card-body">
             <div style="padding-bottom: 10px;">
-                <button class="layui-btn layuiadmin-btn-useradmin" data-type="batchdel" >删除</button>
+                <button class="layui-btn layuiadmin-btn-useradmin" data-type="batchdel">删除</button>
                 <button class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加</button>
             </div>
 
@@ -48,7 +48,7 @@
             <script type="text/html" id="imgTpl">
                 <img style="display: inline-block; width: 50%; height: 100%;" src="{{ d.avatar}}">
             </script>
-            <script type="text/html" id="table-useradmin-webuser">
+            <script type="text/html" id="table-user-list">
                 <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">
                     <i class="layui-icon layui-icon-edit"></i>编辑</a>
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">
@@ -70,11 +70,14 @@
             , table = layui.table;
 
         //监听搜索
-        form.on('submit(LAY-user-front-search)', function (data) {
+        form.on('submit(search)', function (data) {
             var field = data.field;
 
             //执行重载
-            table.reload('LAY-user-manage', {
+            table.reload('reload', {
+                page: {
+                    curr: 1 // 重新从第一页开始
+                },
                 where: field
             });
         });
@@ -104,7 +107,7 @@
                           //,……
                         });
                         */
-                        table.reload('LAY-user-manage');
+                        table.reload('reload');
                         layer.msg('已删除');
                     });
                 });
@@ -125,13 +128,27 @@
                         //监听提交
                         iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
                             var field = data.field; //获取提交的字段
-
+                            // console.log(field)
                             //提交 Ajax 成功后，静态更新表格中的数据
-                            //$.ajax({});
-                            table.reload('LAY-user-front-submit'); //数据刷新
-                            layer.close(index); //关闭弹层
+                            $.ajax({
+                                type: "POST",
+                                url: "/admin/user/create",
+                                dataType: "json",
+                                data: field,
+                                success: function (res) {
+                                    if (res.code == 0) {
+                                        layer.msg('增加成功', {icon: 1})
+                                        table.reload('reload'); //数据刷新
+                                        layer.close(index); //关闭弹层
+                                    } else {
+                                        layer.msg(res.msg, {icon: 5})
+                                    }
+                                },
+                                error: function (res) {
+                                    console.log(res)
+                                }
+                            });
                         });
-
                         submit.trigger('click');
                     }
                 });

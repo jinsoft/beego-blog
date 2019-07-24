@@ -43,3 +43,16 @@ func GetUserList(page, pageSize int, filters ...interface{}) ([]*Users, int64) {
 	query.OrderBy("-id").Limit(pageSize, offset).All(&list)
 	return list, total
 }
+
+func GetUserByEmail(email string) (*Users, error) {
+	u := new(Users)
+	err := orm.NewOrm().QueryTable(u.TableName()).Filter("email", email).One(u)
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
+}
+
+func UserAdd(u *Users) (int64, error) {
+	return orm.NewOrm().Insert(u)
+}

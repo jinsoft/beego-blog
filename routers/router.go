@@ -17,7 +17,7 @@ func init() {
 	beego.Router("/admin", &admin.IndexController{}, "get:Index")
 	beego.Router("/admin/dashboard", &admin.IndexController{}, "get:Dashboard")
 	beego.Router("/admin/user/index", &admin.UserController{}, "get:Index")
-	beego.Router("/admin/user/create", &admin.UserController{}, "get:Create")
+	beego.Router("/admin/user/create", &admin.UserController{}, "get:Create;post:Create")
 
 	// admin common func
 	beego.Router("/admin/upload", &admin.CommonController{}, "post:Upload")

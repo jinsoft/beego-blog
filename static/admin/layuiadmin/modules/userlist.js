@@ -24,8 +24,9 @@
             },
             {field: "last_login", width: 140, title: "最后登录时间"},
             {field: "created_time", title: "加入时间", sort: !0},
-            {title: "操作", width: 150, align: "center", fixed: "right", toolbar: "#table-useradmin-webuser"}
+            {title: "操作", width: 150, align: "center", fixed: "right", toolbar: "#table-user-list"}
         ]],
+        id:"reload",
         page: !0,
         limit: 15,
         height: "full-220",
@@ -42,7 +43,7 @@
                 layer.open({
                     type: 2,
                     title: "编辑用户",
-                    content: "../../../views/user/user/userform.html",
+                    content: "/admin/user/edit",
                     maxmin: !0,
                     area: ["500px", "450px"],
                     btn: ["确定", "取消"],
@@ -58,7 +59,8 @@
                     }
                 })
             }
-        }), i.render({
+        }),
+        i.render({
         elem: "#LAY-user-back-manage",
         url: layui.setter.base + "json/useradmin/mangadmin.js",
         cols: [[{type: "checkbox", fixed: "left"}, {field: "id", width: 80, title: "ID", sort: !0}, {
