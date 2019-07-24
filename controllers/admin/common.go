@@ -10,8 +10,17 @@ import (
 	"time"
 )
 
+const (
+	MSG_OK  = 0
+	MSG_ERR = -1
+)
+
 type CommonController struct {
 	baseController
+}
+
+func (c *CommonController) Prepare() {
+	c.EnableXSRF = false // 上传图片不需要XSRF,登录的用户都可以上传
 }
 
 func (c *CommonController) Upload() {
@@ -55,4 +64,13 @@ func (c *CommonController) Upload() {
 	defer f.Close()
 	c.Data["json"] = result
 	c.ServeJSON()
+}
+
+func (c *baseController) ajaxMsg(msg interface{}, msgno int) {
+	out := make(map[string]interface{})
+	out["code"] = msgno
+	out["msg"] = msg
+	c.Data["json"] = out
+	c.ServeJSON()
+	c.StopRun()
 }
