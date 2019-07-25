@@ -16,9 +16,12 @@ func init() {
 	beego.Router("/admin/login", &admin.AuthController{}, "get:ShowLoginForm;post:Login")
 	beego.Router("/admin", &admin.IndexController{}, "get:Index")
 	beego.Router("/admin/dashboard", &admin.IndexController{}, "get:Dashboard")
+	// admin user module
 	beego.Router("/admin/user/index", &admin.UserController{}, "get:Index")
 	beego.Router("/admin/user/create", &admin.UserController{}, "get:Create;post:Create")
-
+	beego.Router("/admin/user/edit", &admin.UserController{}, "get:Edit;post:Edit")
+	// admin article module
+	beego.Router("/admin/article/index", &admin.ArticleController{}, "get:Index")
 	// admin common func
 	beego.Router("/admin/upload", &admin.CommonController{}, "post:Upload")
 }

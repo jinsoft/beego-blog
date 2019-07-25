@@ -53,6 +53,15 @@ func GetUserByEmail(email string) (*Users, error) {
 	return u, nil
 }
 
+func GetUserByUid(uid string) (*Users, error) {
+	u := new(Users)
+	err := orm.NewOrm().QueryTable(u.TableName()).Filter("uid", uid).One(u)
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
+}
+
 func UserAdd(u *Users) (int64, error) {
 	return orm.NewOrm().Insert(u)
 }

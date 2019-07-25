@@ -48,6 +48,15 @@
             <script type="text/html" id="imgTpl">
                 <img style="display: inline-block; width: 50%; height: 100%;" src="{{ d.avatar}}">
             </script>
+            <script type="text/html" id="switchTpl">
+                {{#  if(d.forbidden ==0){ }}
+                <input type="checkbox" name="forbidden" value="{{ d.forbidden}}" lay-skin="switch" lay-text="正常|禁用"
+                       lay-filter="forbidden" checked>
+                {{#  } else { }}
+                <input type="checkbox" name="forbidden" value="{{ d.forbidden}}" lay-skin="switch" lay-text="正常|禁用"
+                       lay-filter="forbidden">
+                {{#  } }}
+            </script>
             <script type="text/html" id="table-user-list">
                 <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">
                     <i class="layui-icon layui-icon-edit"></i>编辑</a>

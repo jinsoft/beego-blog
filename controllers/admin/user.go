@@ -102,8 +102,22 @@ func (c *UserController) Create() {
 }
 
 func (c UserController) Edit() {
-	c.Data["xsrf_token"] = c.XSRFToken()
-	c.display()
+	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
+	//uid := c.Ctx.Input.Param(":uid")
+	//uid := "521c73534fcc1a1636dbf8cd3e2c1d5b"
+	//if c.IsAjax() {
+	//	User := new(models.Users)
+	//	User.Name = strings.TrimSpace(c.GetString("name"))
+	//}
+	//User,_ :=models.GetUserByUid(uid)
+	//row := make(map[string]interface{})
+	//row["uid"] = uid
+	//row["name"] = User.Name
+	//row["email"] = User.Email
+	//row["phone"] = User.Phone
+	//row["avatar"] = User.Avatar
+	//c.Data["user"] = row
+	c.TplName = "admin/user/edit.html"
 }
 
 func (c *UserController) Table() {
