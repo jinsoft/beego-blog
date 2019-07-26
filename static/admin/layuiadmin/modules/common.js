@@ -1,2 +1,35 @@
 /** layuiAdmin.std-v1.2.1 LPPL License By http://www.layui.com/admin/ */
- ;layui.define(function(e){var i=(layui.$,layui.layer,layui.laytpl,layui.setter,layui.view,layui.admin);i.events.logout=function(){i.req({url:layui.setter.base+"json/user/logout.js",type:"get",data:{},done:function(e){i.exit(function(){location.href="user/login.html"})}})},e("common",{})});
+;layui.define(['jquery', 'layer'], function (e) {
+    var $ = layui.$,
+        layer = layui.layer
+    var obj = {
+        ajax: function (url, data, fn, obj) {
+            var $ = layui.$,
+                layer = layui.layer;
+            var obj = obj || {};
+            var type = obj.type || 'POST';
+            var dataType = obj.dataType || 'json';
+            var index = '';
+            $.ajax({
+                url: url,
+                type: type,
+                async: true,
+                dataType: dataType,
+                data: data,
+                beforeSend: function () {
+                    index = layer.load()
+                },
+                success: function (data) {
+                    console.log(data)
+                },
+                complete: function () {
+                    layer.close(index)
+                },
+                error: function (data) {
+                    layer.msg('请求错误');
+                }
+            })
+        }
+    }
+    e("common", obj)
+});
