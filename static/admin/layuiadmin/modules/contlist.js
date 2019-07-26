@@ -4,21 +4,13 @@
     i.render({
         elem: "#LAY-app-content-list",
         url: "/admin/article/index",
-        cols: [[{type: "checkbox", fixed: "left"}, {field: "id", width: 100, title: "文章ID", sort: !0}, {
-            field: "label",
-            title: "文章标签",
-            minWidth: 100
-        }, {field: "title", title: "文章标题"}, {field: "author", title: "作者"}, {
-            field: "create_time",
-            title: "上传时间",
-            sort: !0
-        }, {field: "status", title: "发布状态", templet: "#buttonTpl", minWidth: 80, align: "center"}, {
-            title: "操作",
-            minWidth: 150,
-            align: "center",
-            fixed: "right",
-            toolbar: "#table-content-list"
-        }]],
+        cols: [[
+            {type: "checkbox", fixed: "left"}, {field: "id", width: 100, title: "文章ID", sort: !0},
+            {field: "label", title: "文章标签", minWidth: 100},
+            {field: "title", title: "文章标题"}, {field: "author", title: "作者"},
+            {field: "create_time", title: "上传时间", sort: !0},
+            {field: "status", title: "发布状态", templet: "#buttonTpl", minWidth: 80, align: "center"},
+            {title: "操作", minWidth: 150, align: "center", fixed: "right", toolbar: "#table-content-list"}]],
         page: !0,
         limit: 10,
         limits: [10, 15, 20, 25, 30],
@@ -49,13 +41,18 @@
             }
         })
     }), i.render({
-        elem: "#LAY-app-content-tags",
-        url: layui.setter.base + "json/content/tags.js",
-        cols: [[{type: "numbers", fixed: "left"}, {field: "id", width: 100, title: "ID", sort: !0}, {
-            field: "tags",
-            title: "分类名",
-            minWidth: 100
-        }, {title: "操作", width: 150, align: "center", fixed: "right", toolbar: "#layuiadmin-app-cont-tagsbar"}]],
+        elem: "#article-tags",
+        url: "/admin/category/index",
+        cols: [
+            [
+                {type: "numbers", fixed: "left"},
+                {field: "id", width: 100, title: "ID", sort: !0},
+                {field: "category_name", title: "分类名", minWidth: 100},
+                {field: "order", title: "排序", minWidth: 100},
+                {title: "操作", width: 150, align: "center", fixed: "right", toolbar: "#article-tagsbar"}
+            ]
+        ],
+        id: "reload",
         text: "对不起，加载出现异常！"
     }), i.on("tool(LAY-app-content-tags)", function (t) {
         var i = t.data;

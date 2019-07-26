@@ -1,0 +1,55 @@
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header layuiadmin-card-header-auto">
+            <button class="layui-btn layuiadmin-btn-tags" data-type="add">添加</button>
+        </div>
+        <div class="layui-card-body">
+            <table id="article-tags" lay-filter="article-tags"></table>
+            <script type="text/html" id="article-tagsbar">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                            class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                            class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script src="/static/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/static/admin/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'contlist', 'table','common'], function () {
+        var table = layui.table,
+            common = layui.common;
+        var $ = layui.$, active = {
+            add: function () {
+                layer.open({
+                    type: 2
+                    , title: '添加分类'
+                    , content: '/admin/category/create'
+                    , area: ['450px', '200px']
+                    , btn: ['确定', '取消']
+                    , yes: function (index, layero) {
+                        var othis = layero.find('iframe').contents().find("#category-form")
+                            , tags = othis.find('input[name="tags"]').val()
+                            , xsrf = othis.find('input[name="_xsrf"]').val()
+                        if (!tags.replace(/\s/g, '')) return;
+                        common.ajax("/admin/user/index", '', function (res) {
+                            console.log(res)
+                        }, {type: "POST"})
+
+                        // table.reload('reload');
+                        // layer.close(index);
+                    }
+                });
+            }
+        }
+        $('.layui-btn.layuiadmin-btn-tags').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>

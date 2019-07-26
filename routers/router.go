@@ -22,6 +22,8 @@ func init() {
 	beego.Router("/admin/user/edit", &admin.UserController{}, "get:Edit;post:Edit")
 	// admin article module
 	beego.Router("/admin/article/index", &admin.ArticleController{}, "get:Index")
+	beego.Router("/admin/category/index", &admin.CategoryController{}, "get:Index;post:Index")
+	beego.Router("/admin/category/create", &admin.CategoryController{}, "get:Create;post:Create")
 	// admin common func
 	beego.Router("/admin/upload", &admin.CommonController{}, "post:Upload")
 }
