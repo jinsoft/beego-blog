@@ -3,14 +3,17 @@
         <label class="layui-form-label">分类名</label>
         <div class="layui-input-inline">
             {{g .xsrfdata}}
-            <input type="text" name="name" lay-verify="required" placeholder="请输入分类名称" autocomplete="off"
+            <input type="hidden" name="id" value="{{g .Info.id}}">
+            <input type="text" name="name" value="{{g .Info.name}}" lay-verify="required" placeholder="请输入分类名称"
+                   autocomplete="off"
                    class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">排序</label>
         <div class="layui-input-inline">
-            <input type="number" name="order" lay-verify="required" value="99" placeholder="排序" autocomplete="off"
+            <input type="number" name="order" value="{{g .Info.order}}" lay-verify="required" value="99"
+                   placeholder="排序" autocomplete="off"
                    class="layui-input">
         </div>
     </div>

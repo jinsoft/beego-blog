@@ -20,7 +20,11 @@
                     index = layer.load()
                 },
                 success: function (data) {
-                    console.log(data)
+                    if (data.code == 0) {
+                        layer.msg(data.msg);
+                        return;
+                    }
+                    fn(data)
                 },
                 complete: function () {
                     layer.close(index)

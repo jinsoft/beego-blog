@@ -21,7 +21,7 @@
         base: '/static/admin/layuiadmin/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'contlist', 'table','common'], function () {
+    }).use(['index', 'contlist', 'table', 'common'], function () {
         var table = layui.table,
             common = layui.common;
         var $ = layui.$, active = {
@@ -30,19 +30,23 @@
                     type: 2
                     , title: '添加分类'
                     , content: '/admin/category/create'
-                    , area: ['450px', '200px']
+                    , area: ['450px', '300px']
                     , btn: ['确定', '取消']
                     , yes: function (index, layero) {
                         var othis = layero.find('iframe').contents().find("#category-form")
-                            , tags = othis.find('input[name="tags"]').val()
+                            , name = othis.find('input[name="name"]').val()
+                            , order = othis.find('input[name="order"]').val()
                             , xsrf = othis.find('input[name="_xsrf"]').val()
-                        if (!tags.replace(/\s/g, '')) return;
-                        common.ajax("/admin/user/index", '', function (res) {
-                            console.log(res)
+                        if (!name.replace(/\s/g, '')) return;
+                        let data = {}
+                        data.name = name;
+                        data.order = order;
+                        data._xsrf = xsrf;
+                        common.ajax("/admin/category/create", data, function (res) {
+                            // layer.msg(res.msg)
                         }, {type: "POST"})
-
-                        // table.reload('reload');
-                        // layer.close(index);
+                        table.reload('reload');
+                        layer.close(index);
                     }
                 });
             }

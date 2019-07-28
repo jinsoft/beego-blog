@@ -6,10 +6,12 @@ import (
 )
 
 type Category struct {
-	Id           int64
-	CategoryName string
-	Order        int8
-	CreateTime   time.Time
+	Id           int64  `json:"id"`
+	CategoryName string `json:"category_name"`
+	Order        int8   `json:"order"`
+	Status       int
+	CreateTime   time.Time `json:"create_time"`
+	UpdateTime   time.Time `json:"update_time"`
 }
 
 func (c *Category) TableName() string {
@@ -21,6 +23,24 @@ func GetCategoryList(page, pageSize int) ([]*Category, int64) {
 	list := make([]*Category, 0)
 	query := orm.NewOrm().QueryTable(new(Category).TableName())
 	total, _ := query.Count()
-	query.OrderBy("-id").Limit(pageSize, offset).All(&list)
+	query.OrderBy("order").Limit(pageSize, offset).All(&list)
 	return list, total
+}
+
+func GetCategoryById(id int64) (Category, error) {
+	var list Category
+	query := orm.NewOrm().QueryTable(new(Category).TableName())
+	query.Filter("id", id).Filter("status", 0).One(&list)
+	return list, nil
+}
+
+func CategoryAdd(c *Category) (int64, error) {
+	return orm.NewOrm().Insert(c)
+}
+
+func (c *Category) Update(fields ...string) error {
+	if _, err := orm.NewOrm().Update(c, fields...); err != nil {
+		return err
+	}
+	return nil
 }

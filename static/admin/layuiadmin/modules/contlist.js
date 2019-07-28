@@ -1,6 +1,6 @@
 /** layuiAdmin.std-v1.2.1 LPPL License By http://www.layui.com/admin/ */
-;layui.define(["table", "form"], function (t) {
-    var e = layui.$, i = layui.table, n = layui.form;
+;layui.define(["table", "form", "common"], function (t) {
+    var e = layui.$, i = layui.table, n = layui.form, common = layui.common, table = layui.table;
     i.render({
         elem: "#LAY-app-content-list",
         url: "/admin/article/index",
@@ -45,7 +45,6 @@
         url: "/admin/category/index",
         cols: [
             [
-                {type: "numbers", fixed: "left"},
                 {field: "id", width: 100, title: "ID", sort: !0},
                 {field: "category_name", title: "分类名", minWidth: 100},
                 {field: "order", title: "排序", minWidth: 100},
@@ -54,7 +53,7 @@
         ],
         id: "reload",
         text: "对不起，加载出现异常！"
-    }), i.on("tool(LAY-app-content-tags)", function (t) {
+    }), i.on("tool(article-tags)", function (t) {
         var i = t.data;
         if ("del" === t.event) layer.confirm("确定删除此分类？", function (e) {
             t.del(), layer.close(e)
@@ -63,13 +62,32 @@
             layer.open({
                 type: 2,
                 title: "编辑分类",
-                content: "../../../views/app/content/tagsform.html?id=" + i.id,
-                area: ["450px", "200px"],
+                content: "/admin/category/edit/" + i.id,
+                area: ["450px", "300px"],
                 btn: ["确定", "取消"],
                 yes: function (e, i) {
-                    var n = i.find("iframe").contents().find("#layuiadmin-app-form-tags"),
-                        l = n.find('input[name="tags"]').val();
-                    l.replace(/\s/g, "") && (t.update({tags: l}), layer.close(e))
+                    var n = i.find("iframe").contents().find("#category-form"),
+                        id = n.find('input[name="id"]').val(),
+                        name = n.find('input[name="name"]').val(),
+                        order = n.find('input[name="order"]').val(),
+                        xsrf = n.find('input[name="_xsrf"]').val();
+                    let data = {}
+                    data.name = name;
+                    data.order = order;
+                    data._xsrf = xsrf;
+                    common.ajax("/admin/category/edit/" + id, data, function (res) {
+                        if (res.code == 0) {
+                            layer.msg(res.msg)
+                        } else {
+                            layer.msg(res.msg, {icon: 5})
+                            return;
+                        }
+                    }, {type: "POST"})
+                    table.reload('reload');
+                    (t.update({
+                        name: name,
+                        order: order
+                    }), layer.close(e))
                 },
                 success: function (t, e) {
                     var n = t.find("iframe").contents().find("#layuiadmin-app-form-tags").click();
