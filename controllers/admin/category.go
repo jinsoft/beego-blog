@@ -78,3 +78,11 @@ func (c *CategoryController) Edit() {
 	c.Data["Info"] = row
 	c.display()
 }
+
+func (c *CategoryController) Destroy() {
+	id := c.Ctx.Input.Param(":id")
+	//category_id, _:=strconv.ParseInt(id,10,64)
+	if c.IsAjax() {
+		c.Ctx.WriteString(id)
+	}
+}

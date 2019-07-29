@@ -56,6 +56,9 @@
     }), i.on("tool(article-tags)", function (t) {
         var i = t.data;
         if ("del" === t.event) layer.confirm("确定删除此分类？", function (e) {
+            common.ajax("/admin/category/" + i.id, {}, function (res) {
+                console.log(res)
+            })
             t.del(), layer.close(e)
         }); else if ("edit" === t.event) {
             e(t.tr);
