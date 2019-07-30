@@ -1,8 +1,7 @@
-<div class="layui-form" lay-filter="category-form" id="category-form" style="padding-top: 30px; text-align: center;">
+<div class="layui-form" id="category-form" style="padding-top: 30px; text-align: center;">
     <div class="layui-form-item">
         <label class="layui-form-label">分类名</label>
         <div class="layui-input-inline">
-            {{g .xsrfdata}}
             <input type="hidden" name="id" value="{{g .Info.id}}">
             <input type="text" name="name" value="{{g .Info.name}}" lay-verify="required" placeholder="请输入分类名称"
                    autocomplete="off"
@@ -16,5 +15,8 @@
                    placeholder="排序" autocomplete="off"
                    class="layui-input">
         </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-category-submit" id="LAY-category-submit" value="确认">
     </div>
 </div>

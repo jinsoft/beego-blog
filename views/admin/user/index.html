@@ -73,9 +73,10 @@
         base: '/static/admin/layuiadmin/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'userlist', 'table'], function () {
+    }).use(['index', 'userlist', 'table', 'common'], function () {
         var $ = layui.$
             , form = layui.form
+            , common = layui.common
             , table = layui.table;
 
         //监听搜索
@@ -137,26 +138,11 @@
                         //监听提交
                         iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
                             var field = data.field; //获取提交的字段
-                            // console.log(field)
                             //提交 Ajax 成功后，静态更新表格中的数据
-                            $.ajax({
-                                type: "POST",
-                                url: "/admin/user/create",
-                                dataType: "json",
-                                data: field,
-                                success: function (res) {
-                                    if (res.code == 0) {
-                                        layer.msg('增加成功', {icon: 1})
-                                        table.reload('reload'); //数据刷新
-                                        layer.close(index); //关闭弹层
-                                    } else {
-                                        layer.msg(res.msg, {icon: 5})
-                                    }
-                                },
-                                error: function (res) {
-                                    console.log(res)
-                                }
-                            });
+                            common.ajax('/admin/user/create', field, function (res) {
+                                table.reload('reload'); //数据刷新
+                                layer.close(index); //关闭弹层
+                            })
                         });
                         submit.trigger('click');
                     }
