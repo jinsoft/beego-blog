@@ -15,6 +15,7 @@ type Users struct {
 	Forbidden   int
 	LastLogin   time.Time
 	CreatedTime time.Time
+	Status      int
 	//Logincount  int64
 	//Lastloginip string
 	Avatar string
@@ -62,6 +63,29 @@ func GetUserByUid(uid string) (*Users, error) {
 	return u, nil
 }
 
-func UserAdd(u *Users) (int64, error) {
+func GetUserById(id int64) (*Users, error) {
+	u := new(Users)
+	err := orm.NewOrm().QueryTable(u.TableName()).Filter("id", id).One(u)
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
+}
+
+func Add(u *Users) (int64, error) {
 	return orm.NewOrm().Insert(u)
+}
+
+func (c *Users) Update(fields ...string) error {
+	if _, err := orm.NewOrm().Update(c, fields...); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *Users) Delete() error {
+	if _, err := orm.NewOrm().Delete(u); err != nil {
+		return err
+	}
+	return nil
 }

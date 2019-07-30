@@ -20,9 +20,11 @@
                     index = layer.load()
                 },
                 success: function (data) {
-                    if (data.code == 0) {
-                        layer.msg(data.msg);
+                    if (data.code != 0) {
+                        layer.msg(data.msg, {icon: 5});
                         return;
+                    } else {
+                        layer.msg(data.msg, {icon: 1})
                     }
                     fn(data)
                 },

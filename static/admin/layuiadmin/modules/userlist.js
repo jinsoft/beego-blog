@@ -1,6 +1,6 @@
 /** layuiAdmin.std-v1.2.1 LPPL License By http://www.layui.com/admin/ */
-;layui.define(["table", "form"], function (e) {
-    var t = layui.$, i = layui.table;
+;layui.define(["table", "form", "common"], function (e) {
+    var t = layui.$, i = layui.table, common = layui.common;
     layui.form;
     i.render({
         elem: "#user-list",
@@ -29,31 +29,37 @@
             {field: "created_time", title: "加入时间", sort: !0},
             {title: "操作", width: 150, align: "center", fixed: "right", toolbar: "#table-user-list"}
         ]],
-        id:"reload",
+        id: "reload",
         page: !0,
         limit: 15,
         height: "full-220",
         text: "对不起，加载出现异常！"
     }),
         i.on("tool(user-list)", function (e) {
-            console.log(e.data);
             var data = e.data;
             if ("del" === e.event) layer.prompt({formType: 1, title: "敏感操作，请验证口令"}, function (t, i) {
-                layer.close(i), layer.confirm("真的删除行么", function (t) {
-                    e.del(), layer.close(t)
-                })
+                if (t == 666) {
+                    layer.close(i), layer.confirm("真的删除行么", function (t) {
+                        common.ajax("/admin/user/delete", {id: data.id}, function (res) {
+                            console.log(res)
+                        }, {type: "DELETE"})
+                        e.del(), layer.close(t)
+                    })
+                } else {
+                    layer.msg('口令不对', {icon: 5, time: 1500})
+                }
             }); else if ("edit" === e.event) {
                 t(e.tr);
                 layer.open({
                     type: 2,
                     title: "编辑用户",
-                    content: "/admin/user/edit",
-                    // content: "/admin/user/edit/"+data.uid,
+                    content: "/admin/user/edit/" + data.uid,
                     maxmin: !0,
                     area: ["500px", "450px"],
                     btn: ["确定", "取消"],
                     yes: function (e, t) {
-                        var l = window["layui-layer-iframe" + e], r = "LAY-user-front-submit",
+                        var l = window["layui-layer-iframe" + e],
+                            r = "LAY-user-front-submit",
                             n = t.find("iframe").contents().find("#" + r);
                         l.layui.form.on("submit(" + r + ")", function (t) {
                             t.field;
@@ -66,23 +72,23 @@
             }
         }),
         i.render({
-        elem: "#LAY-user-back-manage",
-        url: layui.setter.base + "json/useradmin/mangadmin.js",
-        cols: [[{type: "checkbox", fixed: "left"}, {field: "id", width: 80, title: "ID", sort: !0}, {
-            field: "loginname",
-            title: "登录名"
-        }, {field: "telphone", title: "手机"}, {field: "email", title: "邮箱"}, {
-            field: "role",
-            title: "角色"
-        }, {field: "jointime", title: "加入时间", sort: !0}, {
-            field: "check",
-            title: "审核状态",
-            templet: "#buttonTpl",
-            minWidth: 80,
-            align: "center"
-        }, {title: "操作", width: 150, align: "center", fixed: "right", toolbar: "#table-useradmin-admin"}]],
-        text: "对不起，加载出现异常！"
-    }), i.on("tool(LAY-user-back-manage)", function (e) {
+            elem: "#LAY-user-back-manage",
+            url: layui.setter.base + "json/useradmin/mangadmin.js",
+            cols: [[{type: "checkbox", fixed: "left"}, {field: "id", width: 80, title: "ID", sort: !0}, {
+                field: "loginname",
+                title: "登录名"
+            }, {field: "telphone", title: "手机"}, {field: "email", title: "邮箱"}, {
+                field: "role",
+                title: "角色"
+            }, {field: "jointime", title: "加入时间", sort: !0}, {
+                field: "check",
+                title: "审核状态",
+                templet: "#buttonTpl",
+                minWidth: 80,
+                align: "center"
+            }, {title: "操作", width: 150, align: "center", fixed: "right", toolbar: "#table-useradmin-admin"}]],
+            text: "对不起，加载出现异常！"
+        }), i.on("tool(LAY-user-back-manage)", function (e) {
         e.data;
         if ("del" === e.event) layer.prompt({formType: 1, title: "敏感操作，请验证口令"}, function (t, i) {
             layer.close(i), layer.confirm("确定删除此管理员？", function (t) {

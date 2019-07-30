@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"html/template"
+	"github.com/astaxie/beego"
 	"strings"
 	"time"
 	"web/models"
@@ -61,22 +61,10 @@ func (c *UserController) Index() {
 		c.ServeJSON()
 		c.StopRun()
 	}
-	//var page int64
-	//var pagesize int64 = 15
-	//var list []*models.User
-	//
-	//if page, _ = c.GetInt64("page"); page < 1 {
-	//	page = 1
-	//}
-	//
-	//offset := (page - 1) * pagesize
-	//
-	//count, _ := user.Query().Count()
 	c.display()
 }
 
 func (c *UserController) Create() {
-	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	if c.IsAjax() {
 		User := new(models.Users)
 		User.Uid = util.GUID()
@@ -93,7 +81,7 @@ func (c *UserController) Create() {
 		pwd := strings.TrimSpace(c.GetString("passwrod"))
 		User.Password = models.Md5([]byte(pwd))
 		User.CreatedTime = time.Now()
-		if _, err := models.UserAdd(User); err != nil {
+		if _, err := models.Add(User); err != nil {
 			c.ajaxMsg(err.Error(), MSG_ERR)
 		}
 		c.ajaxMsg("添加成功", MSG_OK)
@@ -101,23 +89,52 @@ func (c *UserController) Create() {
 	c.display()
 }
 
-func (c UserController) Edit() {
-	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
-	//uid := c.Ctx.Input.Param(":uid")
-	//uid := "521c73534fcc1a1636dbf8cd3e2c1d5b"
-	//if c.IsAjax() {
-	//	User := new(models.Users)
-	//	User.Name = strings.TrimSpace(c.GetString("name"))
-	//}
-	//User,_ :=models.GetUserByUid(uid)
-	//row := make(map[string]interface{})
-	//row["uid"] = uid
-	//row["name"] = User.Name
-	//row["email"] = User.Email
-	//row["phone"] = User.Phone
-	//row["avatar"] = User.Avatar
-	//c.Data["user"] = row
-	c.TplName = "admin/user/edit.html"
+func (c *UserController) Edit() {
+	uid := c.Ctx.Input.Param(":uid")
+	if c.IsAjax() {
+		User := new(models.Users)
+		User.Name = strings.TrimSpace(c.GetString("name"))
+		User.Phone = strings.TrimSpace(c.GetString("phone"))
+		User.Email = strings.TrimSpace(c.GetString("email"))
+		User.Avatar = strings.TrimSpace(c.GetString("avatar"))
+		if err := User.Update(); err != nil {
+			c.ajaxMsg(err.Error(), MSG_ERR)
+		}
+		c.ajaxMsg("修改成功", MSG_OK)
+	}
+	User, _ := models.GetUserByUid(uid)
+	row := make(map[string]interface{})
+	row["uid"] = uid
+	row["name"] = User.Name
+	row["email"] = User.Email
+	row["phone"] = User.Phone
+	row["avatar"] = User.Avatar
+	c.Data["user"] = row
+	c.display()
+}
+
+func (c *UserController) Destroy() {
+	id, err := c.GetInt64("id")
+	if err != nil {
+		c.ajaxMsg(err.Error(), MSG_ERR)
+	}
+	// todo:
+	environment := beego.AppConfig.String("RunMode")
+	if environment == "dev" {
+		// dev 环境物理删除
+		user := models.Users{Id: id}
+		if user.Delete() != nil {
+			c.ajaxMsg("删除失败", MSG_ERR)
+		}
+	} else {
+		user, _ := models.GetUserById(id)
+		user.Id = id
+		user.Status = -1
+		if err := user.Update(); err != nil {
+			c.ajaxMsg(err.Error(), MSG_ERR)
+		}
+	}
+	c.ajaxMsg("删除成功", MSG_OK)
 }
 
 func (c *UserController) Table() {
