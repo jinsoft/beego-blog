@@ -2,6 +2,7 @@ package admin
 
 import (
 	"github.com/astaxie/beego"
+	"strconv"
 	"strings"
 	"time"
 	"web/models"
@@ -114,21 +115,19 @@ func (c *UserController) Edit() {
 }
 
 func (c *UserController) Destroy() {
-	id, err := c.GetInt64("id")
-	if err != nil {
-		c.ajaxMsg(err.Error(), MSG_ERR)
-	}
-	// todo:
+	id := c.Ctx.Input.Param(":id")
+	userid, _ := strconv.ParseInt(id, 10, 64)
 	environment := beego.AppConfig.String("RunMode")
 	if environment == "dev" {
 		// dev 环境物理删除
-		user := models.Users{Id: id}
+		user := models.Users{Id: userid}
 		if user.Delete() != nil {
 			c.ajaxMsg("删除失败", MSG_ERR)
 		}
+		// todo: 删除用户的其他资源
 	} else {
-		user, _ := models.GetUserById(id)
-		user.Id = id
+		user, _ := models.GetUserById(userid)
+		user.Id = userid
 		user.Status = -1
 		if err := user.Update(); err != nil {
 			c.ajaxMsg(err.Error(), MSG_ERR)

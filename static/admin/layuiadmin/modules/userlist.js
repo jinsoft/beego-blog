@@ -40,7 +40,7 @@
             if ("del" === e.event) layer.prompt({formType: 1, title: "敏感操作，请验证口令"}, function (t, i) {
                 if (t == 666) {
                     layer.close(i), layer.confirm("真的删除行么", function (t) {
-                        common.ajax("/admin/user/delete", {id: data.id}, function (res) {
+                        common.ajax("/admin/user/" + data.id, {}, function (res) {
                             console.log(res)
                         }, {type: "DELETE"})
                         e.del(), layer.close(t)

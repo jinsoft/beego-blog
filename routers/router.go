@@ -20,7 +20,7 @@ func init() {
 	beego.Router("/admin/user/index", &admin.UserController{}, "get:Index")
 	beego.Router("/admin/user/create", &admin.UserController{}, "get:Create;post:Create")
 	beego.Router("/admin/user/edit/:uid:string", &admin.UserController{}, "get:Edit;post:Edit")
-	beego.Router("/admin/user/delete", &admin.UserController{}, "delete:Destroy")
+	beego.Router("/admin/user/:id:int", &admin.UserController{}, "delete:Destroy")
 	// admin article module
 	beego.Router("/admin/article/index", &admin.ArticleController{}, "get:Index")
 	beego.Router("/admin/category/index", &admin.CategoryController{}, "get:Index;post:Index")
