@@ -15,10 +15,14 @@ type AuthController struct {
 	baseController
 }
 
+func (c *AuthController) Prepare() {
+	c.EnableXSRF = true
+}
+
 // 登录页
 func (c *AuthController) ShowLoginForm() {
 	c.Data["xsrf_token"] = c.XSRFToken()
-	c.TplName = "admin/login.tpl"
+	c.TplName = "admin/login.html"
 }
 
 // 处理登录请求

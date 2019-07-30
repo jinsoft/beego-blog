@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"html/template"
 	"strconv"
 	"strings"
 	"time"
@@ -36,7 +35,6 @@ func (c *CategoryController) Index() {
 }
 
 func (c *CategoryController) Create() {
-	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	if c.IsAjax() {
 		name := strings.TrimSpace(c.GetString("name"))
 		order, err := c.GetInt8("order")
@@ -56,7 +54,6 @@ func (c *CategoryController) Create() {
 }
 
 func (c *CategoryController) Edit() {
-	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	id := c.Ctx.Input.Param(":id")
 	category_id, _ := strconv.ParseInt(id, 10, 64)
 	if c.IsAjax() {
