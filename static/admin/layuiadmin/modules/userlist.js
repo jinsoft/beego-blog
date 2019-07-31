@@ -53,7 +53,7 @@
                 layer.open({
                     type: 2,
                     title: "编辑用户",
-                    content: "/admin/user/edit/" + data.uid,
+                    content: "/admin/user/" + data.id,
                     maxmin: !0,
                     area: ["500px", "450px"],
                     btn: ["确定", "取消"],
@@ -62,8 +62,10 @@
                             r = "LAY-user-front-submit",
                             n = t.find("iframe").contents().find("#" + r);
                         l.layui.form.on("submit(" + r + ")", function (t) {
-                            t.field;
-                            i.reload("reload"), layer.close(e)
+                            var field = t.field;
+                            common.ajax("/admin/user/" + data.id, field, function (res) {
+                                i.reload("reload"), layer.close(e)
+                            })
                         }), n.trigger("click")
                     },
                     success: function (e, t) {

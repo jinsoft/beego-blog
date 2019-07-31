@@ -91,9 +91,11 @@ func (c *UserController) Create() {
 }
 
 func (c *UserController) Edit() {
-	uid := c.Ctx.Input.Param(":uid")
+	uid := c.Ctx.Input.Param(":id")
+	id, _ := strconv.ParseInt(uid, 10, 64)
 	if c.IsAjax() {
 		User := new(models.Users)
+		User.Id = id
 		User.Name = strings.TrimSpace(c.GetString("name"))
 		User.Phone = strings.TrimSpace(c.GetString("phone"))
 		User.Email = strings.TrimSpace(c.GetString("email"))
@@ -103,7 +105,7 @@ func (c *UserController) Edit() {
 		}
 		c.ajaxMsg("修改成功", MSG_OK)
 	}
-	User, _ := models.GetUserByUid(uid)
+	User, _ := models.GetUserById(id)
 	row := make(map[string]interface{})
 	row["uid"] = uid
 	row["name"] = User.Name
