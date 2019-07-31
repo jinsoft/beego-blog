@@ -1,6 +1,6 @@
 /** layuiAdmin.std-v1.2.1 LPPL License By http://www.layui.com/admin/ */
 ;layui.define(["table", "form", "common"], function (t) {
-    var e = layui.$, i = layui.table, n = layui.form, common = layui.common, table = layui.table;
+    var e = layui.$, i = layui.table, common = layui.common;
     i.render({
         elem: "#LAY-app-content-list",
         url: "/admin/article/index",
@@ -53,48 +53,33 @@
         ],
         id: "reload",
         text: "对不起，加载出现异常！"
-    }), i.on("tool(article-tags)", function (t) {
-        var i = t.data;
-        if ("del" === t.event) layer.confirm("确定删除此分类？", function (e) {
-            common.ajax("/admin/category/" + i.id, {}, function (res) {
+    }), i.on("tool(article-tags)", function (e) {
+        var data = e.data;
+        if ("del" === e.event) layer.confirm("确定删除此分类？", function (t) {
+            common.ajax("/admin/category/" + data.id, {}, function (res) {
                 console.log(res)
-            })
-            t.del(), layer.close(e)
-        }); else if ("edit" === t.event) {
-            e(t.tr);
+            }, {type: "DELETE"})
+            e.del(), layer.close(t)
+        }); else if ("edit" === e.event) {
+            t(e.tr);
             layer.open({
                 type: 2,
                 title: "编辑分类",
-                content: "/admin/category/edit/" + i.id,
+                content: "/admin/category/" + data.id,
                 area: ["450px", "300px"],
                 btn: ["确定", "取消"],
-                yes: function (e, i) {
-                    var n = i.find("iframe").contents().find("#category-form"),
-                        id = n.find('input[name="id"]').val(),
-                        name = n.find('input[name="name"]').val(),
-                        order = n.find('input[name="order"]').val(),
-                        xsrf = n.find('input[name="_xsrf"]').val();
-                    let data = {}
-                    data.name = name;
-                    data.order = order;
-                    data._xsrf = xsrf;
-                    common.ajax("/admin/category/edit/" + id, data, function (res) {
-                        if (res.code == 0) {
-                            layer.msg(res.msg)
-                        } else {
-                            layer.msg(res.msg, {icon: 5})
-                            return;
-                        }
-                    }, {type: "POST"})
-                    table.reload('reload');
-                    (t.update({
-                        name: name,
-                        order: order
-                    }), layer.close(e))
+                yes: function (index, t) {
+                    var l = window["layui-layer-iframe" + index],
+                        r = "LAY-category-submit",
+                        n = t.find("iframe").contents().find("#" + r);
+                    l.layui.form.on("submit(" + r + ")", function (t) {
+                        var field = t.field;
+                        common.ajax("/admin/category/" + data.id, field, function (res) {
+                            i.reload("reload"), layer.close(index)
+                        })
+                    }), n.trigger("click")
                 },
-                success: function (t, e) {
-                    var n = t.find("iframe").contents().find("#layuiadmin-app-form-tags").click();
-                    n.find('input[name="tags"]').val(i.tags)
+                success: function (e, t) {
                 }
             })
         }

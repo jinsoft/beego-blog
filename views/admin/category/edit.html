@@ -2,7 +2,6 @@
     <div class="layui-form-item">
         <label class="layui-form-label">分类名</label>
         <div class="layui-input-inline">
-            <input type="hidden" name="id" value="{{g .Info.id}}">
             <input type="text" name="name" value="{{g .Info.name}}" lay-verify="required" placeholder="请输入分类名称"
                    autocomplete="off"
                    class="layui-input">
@@ -20,3 +19,14 @@
         <input type="button" lay-submit lay-filter="LAY-category-submit" id="LAY-category-submit" value="确认">
     </div>
 </div>
+
+<script>
+    layui.config({
+        base: '/static/admin/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form'], function () {
+        var $ = layui.$
+            , form = layui.form;
+    })
+</script>

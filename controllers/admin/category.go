@@ -78,8 +78,10 @@ func (c *CategoryController) Edit() {
 
 func (c *CategoryController) Destroy() {
 	id := c.Ctx.Input.Param(":id")
-	//category_id, _:=strconv.ParseInt(id,10,64)
-	if c.IsAjax() {
-		c.Ctx.WriteString(id)
+	category_id, _ := strconv.ParseInt(id, 10, 64)
+	category := models.Category{Id: category_id}
+	if category.Delete() != nil {
+		c.ajaxMsg("删除失败!", MSG_ERR)
 	}
+	c.ajaxMsg("删除成功", MSG_OK)
 }

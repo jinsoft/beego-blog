@@ -44,3 +44,10 @@ func (c *Category) Update(fields ...string) error {
 	}
 	return nil
 }
+
+func (c *Category) Delete() error {
+	if _, err := orm.NewOrm().Delete(c); err != nil {
+		return err
+	}
+	return nil
+}

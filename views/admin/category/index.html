@@ -34,25 +34,16 @@
                     , btn: ['确定', '取消']
                     , yes: function (index, layero) {
                         var iframeWindow = window['layui-layer-iframe' + index]
-                            , submitID = 'LAY-user-back-submit'
-                            , submit = layero.find('iframe').contents().find('#' + submitID);
+                            , submitID = 'category-submit'
+                            , n = layero.find('iframe').contents().find('#' + submitID);
                         // 监听提交
                         iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
                             var field = data.field;
-                            console.log(field)
-                        })
-                        // var othis = layero.find('iframe').contents().find("#category-form")
-                        //     , name = othis.find('input[name="name"]').val()
-                        //     , order = othis.find('input[name="order"]').val()
-                        // if (!name.replace(/\s/g, '')) return;
-                        // let data = {}
-                        // data.name = name;
-                        // data.order = order;
-                        // common.ajax("/admin/category/create", data, function (res) {
-                        //     // layer.msg(res.msg)
-                        // }, {type: "POST"})
-                        // table.reload('reload');
-                        // layer.close(index);
+                            common.ajax("/admin/category/create", field, function (res) {
+                                table.reload('reload');
+                                layer.close(index);
+                            })
+                        }), n.trigger("click");
                     }
                 });
             }
