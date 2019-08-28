@@ -3437,7 +3437,7 @@
                     else
                     {
                         var emdlogoMathcs = $1.match(editormdLogoReg);
-                        var twemojiMatchs = $1.match(twemojiReg);
+                        // var twemojiMatchs = $1.match(twemojiReg);
 
                         if (emdlogoMathcs)                                        
                         {                            
@@ -3447,14 +3447,14 @@
                                 return "<i class=\"" + logoName + "\" title=\"Editor.md logo (" + logoName + ")\"></i>";
                             }
                         }
-                        else if (twemojiMatchs) 
-                        {
-                            for (var t = 0, len3 = twemojiMatchs.length; t < len3; t++)
-                            {
-                                var twe = twemojiMatchs[t].replace(/:/g, "").replace("tw-", "");
-                                return "<img src=\"" + editormd.twemoji.path + twe + editormd.twemoji.ext + "\" title=\"twemoji-" + twe + "\" alt=\"twemoji-" + twe + "\" class=\"emoji twemoji\" />";
-                            }
-                        }
+                        // else if (twemojiMatchs)
+                        // {
+                        //     for (var t = 0, len3 = twemojiMatchs.length; t < len3; t++)
+                        //     {
+                        //         var twe = twemojiMatchs[t].replace(/:/g, "").replace("tw-", "");
+                        //         return "<img src=\"" + editormd.twemoji.path + twe + editormd.twemoji.ext + "\" title=\"twemoji-" + twe + "\" alt=\"twemoji-" + twe + "\" class=\"emoji twemoji\" />";
+                        //     }
+                        // }
                         else
                         {
                             var src = (name === "+1") ? "plus1" : name;
