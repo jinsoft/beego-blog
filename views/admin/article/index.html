@@ -46,7 +46,7 @@
                 <button class="layui-btn layuiadmin-btn-list" data-type="batchdel">删除</button>
                 <button class="layui-btn layuiadmin-btn-list" data-type="add">添加</button>
             </div>
-            <table id="LAY-app-content-list" lay-filter="LAY-app-content-list"></table>
+            <table id="article-list" lay-filter="article-list"></table>
             <script type="text/html" id="buttonTpl">
                 {{#  if(d.status){ }}
                 <button class="layui-btn layui-btn-xs">已发布</button>
@@ -55,8 +55,10 @@
                 {{#  } }}
             </script>
             <script type="text/html" id="table-content-list">
-                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                            class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                            class="layui-icon layui-icon-delete"></i>删除</a>
             </script>
         </div>
     </div>
@@ -68,30 +70,30 @@
         base: '/static/admin/layuiadmin/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'contlist', 'table'], function(){
+    }).use(['index', 'contlist', 'table'], function () {
         var table = layui.table
-            ,form = layui.form;
+            , form = layui.form;
 
         //监听搜索
-        form.on('submit(search)', function(data){
+        form.on('submit(search)', function (data) {
             var field = data.field;
 
             //执行重载
-            table.reload('LAY-app-content-list', {
+            table.reload('article-list', {
                 where: field
             });
         });
 
         var $ = layui.$, active = {
-            batchdel: function(){
-                var checkStatus = table.checkStatus('LAY-app-content-list')
-                    ,checkData = checkStatus.data; //得到选中的数据
+            batchdel: function () {
+                var checkStatus = table.checkStatus('article-list')
+                    , checkData = checkStatus.data; //得到选中的数据
 
-                if(checkData.length === 0){
+                if (checkData.length === 0) {
                     return layer.msg('请选择数据');
                 }
 
-                layer.confirm('确定删除吗？', function(index) {
+                layer.confirm('确定删除吗？', function (index) {
 
                     //执行 Ajax 后重载
                     /*
@@ -100,28 +102,29 @@
                       //,……
                     });
                     */
-                    table.reload('LAY-app-content-list');
+                    table.reload('article-list');
                     layer.msg('已删除');
                 });
             },
-            add: function(){
+            add: function () {
                 layer.open({
                     type: 2
-                    ,title: '添加文章'
-                    ,content: 'listform.html'
-                    ,maxmin: true
-                    ,area: ['550px', '550px']
-                    ,btn: ['确定', '取消']
-                    ,yes: function(index, layero){
+                    , title: '添加文章'
+                    , content: '/admin/article/create'
+                    , maxmin: true
+                    , resize: true
+                    , area: ['1050px', '650px']
+                    , btn: ['确定', '取消']
+                    , yes: function (index, layero) {
                         //点击确认触发 iframe 内容中的按钮提交
-                        var submit = layero.find('iframe').contents().find("#layuiadmin-app-form-submit");
+                        var submit = layero.find('iframe').contents().find("#article-submit");
                         submit.click();
                     }
                 });
             }
         };
 
-        $('.layui-btn.layuiadmin-btn-list').on('click', function(){
+        $('.layui-btn.layuiadmin-btn-list').on('click', function () {
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
         });

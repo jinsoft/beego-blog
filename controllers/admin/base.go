@@ -17,6 +17,7 @@ type baseController struct {
 	controllerName string
 	actionName     string
 	clientIp       string
+	pageNumber     int
 	pageSize       int
 }
 
@@ -28,6 +29,18 @@ func (c *baseController) Prepare() {
 	c.controllerName = strings.ToLower(controllerName[0 : len(controllerName)-10])
 	c.actionName = strings.ToLower(actionName)
 	c.auth()
+	page, err := c.GetInt("page")
+	if err != nil || page < 1 {
+		c.pageNumber = 1
+	} else {
+		c.pageNumber = page
+	}
+	limit, err := c.GetInt("limit")
+	if err != nil {
+		c.pageSize = 15
+	} else {
+		c.pageSize = limit
+	}
 }
 
 func (c *baseController) auth() {

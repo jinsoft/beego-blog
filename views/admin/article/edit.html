@@ -1,0 +1,162 @@
+<link rel="stylesheet" href="/static/editormd/css/editormd.css" />
+<div id="layout">
+    <div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list"
+         style="padding: 20px 30px 0 0;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">文章标题</label>
+            <div class="layui-input-inline">
+                <input type="text" name="title" lay-verify="required" placeholder="请输入用户名" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">发布人</label>
+            <div class="layui-input-inline">
+                <input type="text" name="author" lay-verify="required" placeholder="请输入号码" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">文章内容</label>
+            <div class="layui-input-inline" id="md-content">
+            <textarea name="content" lay-verify="required" autocomplete="off"
+                      class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">标签</label>
+            <div class="layui-input-inline">
+                <select name="label" lay-verify="required">
+                    <option value="">请选择标签</option>
+                    <option value="美食">美食</option>
+                    <option value="新闻">新闻</option>
+                    <option value="八卦">八卦</option>
+                    <option value="体育">体育</option>
+                    <option value="音乐">音乐</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">发布状态</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" lay-verify="required" lay-filter="status" name="status" lay-skin="switch"
+                       lay-text="已发布|待修改">
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <input type="button" lay-submit lay-filter="layuiadmin-app-form-submit" id="layuiadmin-app-form-submit"
+                   value="确认添加">
+            <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit"
+                   value="确认编辑">
+        </div>
+    </div>
+</div>
+<script src="/static/jquery/jquery.min.js"></script>
+<script src="/static/editormd/editormd.js"></script>
+<script type="text/javascript">
+    layui.config({
+        base: '/static/admin/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', 'common'], function () {
+        var $ = layui.$,
+            common = layui.common,
+            form = layui.form;
+
+        var editor = editormd("md-content", {
+            width: 880,
+            height: 740,
+            path : '/static/editormd/lib/',
+            codeFold : true,
+            toolbarIcons : function() {
+                return ["undo", "redo", "emoji", "bold", "del", "italic", "quote",
+                    "ucwords", "uppercase", "lowercase", "list-ul", "list-ol", "hr",
+                    "link", "code", "code-block",
+                    "table", "datetime", "html-entities", "|", "goto-line", "watch",
+                    "preview", "fullscreen"];
+            },
+            //syncScrolling : false,
+            saveHTMLToTextarea : true,    // 保存 HTML 到 Textarea
+            searchReplace : true,
+            //watch : false,                // 关闭实时预览
+            htmlDecode : "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启
+            //toolbar  : false,             //关闭工具栏
+            //previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
+            emoji : true,
+            taskList : true,
+            tocm            : true,         // Using [TOCM]
+            tex : true,                   // 开启科学公式TeX语言支持，默认关闭
+            flowChart : true,             // 开启流程图支持，默认关闭
+            sequenceDiagram : true,       // 开启时序/序列图支持，默认关闭,
+            //dialogLockScreen : false,   // 设置弹出层对话框不锁屏，全局通用，默认为true
+            //dialogShowMask : false,     // 设置弹出层对话框显示透明遮罩层，全局通用，默认为true
+            //dialogDraggable : false,    // 设置弹出层对话框不可拖动，全局通用，默认为true
+            //dialogMaskOpacity : 0.4,    // 设置透明遮罩层的透明度，全局通用，默认值为0.1
+            //dialogMaskBgColor : "#000", // 设置透明遮罩层的背景颜色，全局通用，默认为#fff
+            imageUpload : true,
+            imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL : "./php/upload.php",
+            onload : function() {
+                console.log('onload', this);
+                //this.fullscreen();
+                //this.unwatch();
+                //this.watch().fullscreen();
+
+                //this.setMarkdown("#PHP");
+                //this.width("100%");
+                //this.height(480);
+                //this.resize("100%", 640);
+            }
+        });
+
+        $("#goto-line-btn").bind("click", function(){
+            editor.gotoLine(90);
+        });
+
+        $("#show-btn").bind('click', function(){
+            editor.show();
+        });
+
+        $("#hide-btn").bind('click', function(){
+            editor.hide();
+        });
+
+        $("#get-md-btn").bind('click', function(){
+            alert(editor.getMarkdown());
+        });
+
+        $("#get-html-btn").bind('click', function() {
+            alert(editor.getHTML());
+        });
+
+        $("#watch-btn").bind('click', function() {
+            editor.watch();
+        });
+
+        $("#unwatch-btn").bind('click', function() {
+            editor.unwatch();
+        });
+
+        $("#preview-btn").bind('click', function() {
+            editor.previewing();
+        });
+
+        $("#fullscreen-btn").bind('click', function() {
+            editor.fullscreen();
+        });
+
+        $("#show-toolbar-btn").bind('click', function() {
+            editor.showToolbar();
+        });
+
+        $("#close-toolbar-btn").bind('click', function() {
+            editor.hideToolbar();
+        });
+
+        $("#toc-default-btn").click(function() {
+            editor.config("tocDropdown", false);
+        });
+    });
+</script>
+</body>
+</html>

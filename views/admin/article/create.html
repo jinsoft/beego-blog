@@ -1,0 +1,113 @@
+<link rel="stylesheet" href="/static/editormd/css/editormd.css" media="all">
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list"
+     style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">文章标题</label>
+        <div class="layui-input-inline">
+            <input type="text" name="title" lay-verify="required" placeholder="请输入用户名" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">文章内容</label>
+        <div class="layui-input-inline" id="content">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">所属栏目</label>
+        <div class="layui-input-inline">
+            <select name="category">
+                <option value="">请选择栏目</option>
+                {{g range $k,$v := .category}}
+                <option value="{{g $v.Id}}">{{g $v.CategoryName}}</option>
+                {{g end}}
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">发布状态</label>
+        <div class="layui-input-inline">
+            <input type="checkbox" lay-verify="required" lay-filter="status" name="status" lay-skin="switch"
+                   lay-text="发布|草稿">
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="article-submit" id="article-submit"
+               value="确认添加">
+    </div>
+</div>
+<script src="/static/jquery/jquery.min.js"></script>
+<script src="/static/editormd/editormd.js"></script>
+<script>
+    layui.config({
+        base: '/static/admin/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', 'common'], function () {
+        var $ = layui.$,
+            common = layui.common,
+            form = layui.form;
+
+        var editor = editormd("content", {
+            width: 880,
+            height: 740,
+            path: '/static/editormd/lib/',
+            codeFold: true,
+            toolbarIcons: function () {
+                return ["undo", "redo", "emoji", "bold", "del", "italic", "quote",
+                    "ucwords", "uppercase", "lowercase", "list-ul", "list-ol", "hr",
+                    "link", "code", "code-block",
+                    "table", "datetime", "html-entities", "|", "goto-line", "watch",
+                    "preview", "fullscreen"];
+            },
+            //syncScrolling : false,
+            saveHTMLToTextarea: true,    // 保存 HTML 到 Textarea
+            searchReplace: true,
+            //watch : false,                // 关闭实时预览
+            htmlDecode: "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启
+            //toolbar  : false,             //关闭工具栏
+            //previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
+            emoji: true,
+            placeholder: '说点啥吧',
+            taskList: true,
+            tocm: true,         // Using [TOCM]
+            tex: true,                   // 开启科学公式TeX语言支持，默认关闭
+            flowChart: true,             // 开启流程图支持，默认关闭
+            sequenceDiagram: true,       // 开启时序/序列图支持，默认关闭,
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "./php/upload.php",
+            onload: function () {
+                //
+            }
+        });
+
+        form.on('submit(article-submit)', function (data) {
+            var field = data.field; //获取提交的字段
+            console.log(data.field);
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+
+            if (field.status == 'on') {
+                field.status = 1;
+            } else {
+                field.status = 0;
+            }
+            if (field.category == '') {
+                layer.msg("请选择所属栏目")
+                return false;
+            }
+
+            //提交 Ajax 成功后，关闭当前弹层并重载表格
+            common.ajax('/admin/article/create', field, function (res) {
+                console.log(res);
+                if(res.code == 0){
+                    parent.layui.table.reload('article-list'); //重载表格
+                    parent.layer.close(index); //再执行关闭
+                }
+            });
+            // parent.layui.table.reload('LAY-app-content-list'); //重载表格
+            // parent.layer.close(index); //再执行关闭
+        });
+    })
+</script>

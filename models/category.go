@@ -27,6 +27,13 @@ func GetCategoryList(page, pageSize int) ([]*Category, int64) {
 	return list, total
 }
 
+func GetCategoryAllList() []*Category {
+	list := make([]*Category, 0)
+	query := orm.NewOrm().QueryTable(new(Category).TableName())
+	query.OrderBy("order").All(&list)
+	return list
+}
+
 func GetCategoryById(id int64) (Category, error) {
 	var list Category
 	query := orm.NewOrm().QueryTable(new(Category).TableName())
