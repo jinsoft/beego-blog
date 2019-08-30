@@ -2,7 +2,7 @@
 ;layui.define(["table", "form", "common"], function (t) {
     var e = layui.$, i = layui.table, common = layui.common;
     i.render({
-        elem: "#LAY-app-content-list",
+        elem: "#article-list",
         url: "/admin/article/index",
         cols: [[
             {type: "checkbox", fixed: "left"}, {field: "id", width: 100, title: "文章ID", sort: !0},
@@ -15,7 +15,7 @@
         limit: 10,
         limits: [10, 15, 20, 25, 30],
         text: "对不起，加载出现异常！"
-    }), i.on("tool(LAY-app-content-list)", function (t) {
+    }), i.on("tool(article-list)", function (t) {
         var e = t.data;
         "del" === t.event ? layer.confirm("确定删除此文章？", function (e) {
             t.del(), layer.close(e)
