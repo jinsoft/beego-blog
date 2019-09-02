@@ -23,7 +23,7 @@ func init() {
 	db_url := db_username + ":" + db_password + "@tcp(" + db_host + ":" + db_port + ")/" + db_databases + "?charset=utf8&loc=Asia%2FShanghai"
 	orm.RegisterDataBase("default", "mysql", db_url)
 
-	orm.RegisterModel(new(Users), new(Admins), new(Article), new(Category))
+	orm.RegisterModel(new(Users), new(Admins), new(Article), new(Category), new(Tags))
 	//orm.RegisterModelWithPrefix(beego.AppConfig.String("DB_PREFIX"),
 	//	new(Users), new(Admins))
 

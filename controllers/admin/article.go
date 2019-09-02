@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"github.com/astaxie/beego/orm"
 	"strconv"
 	"strings"
 	"web/models"
@@ -42,11 +43,45 @@ func (c *ArticleController) Create() {
 		title := strings.TrimSpace(c.GetString("title"))
 		content := strings.TrimSpace(c.GetString("content-html-code"))
 		category := strings.TrimSpace(c.GetString("category"))
+		tags := strings.TrimSpace(c.GetString("tags"))
 		status, err := c.GetInt8("status")
 		if err != nil {
 			status = 0
 		}
 		category_id, _ := strconv.Atoi(category)
+
+		addTags := make([]string, 0)
+		// 标签过滤
+		if tags != "" {
+			tagArr := strings.Split(tags, ",")
+			for _, v := range tagArr {
+				if tag := strings.TrimSpace(v); tag != "" {
+					exists := false
+					for _, vv := range addTags {
+						if vv == tag {
+							exists = true
+							break
+						}
+					}
+					if !exists {
+						addTags = append(addTags, tag)
+					}
+				}
+			}
+		}
+
+		if len(addTags) > 0 {
+			for _, v := range addTags {
+				tag := models.Tags{Name: v}
+				if tag.Read("Name") == orm.ErrNoRows {
+					tag.Count = 1
+					tag.Insert()
+				} else {
+					tag.Count += 1
+					tag.Update("Count")
+				}
+			}
+		}
 
 		Article := new(models.Article)
 		Article.Uid = c.uid

@@ -4,8 +4,26 @@
     <div class="layui-form-item">
         <label class="layui-form-label">文章标题</label>
         <div class="layui-input-inline">
-            <input type="text" name="title" lay-verify="required" placeholder="请输入用户名" autocomplete="off"
+            <input type="text" name="title" value="我是测试标题" lay-verify="required" placeholder="请输入用户名" autocomplete="off"
                    class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属栏目</label>
+        <div class="layui-input-inline">
+            <select name="category">
+                <option value="">请选择栏目</option>
+                {{g range .category}}
+                <option value="{{g .Id}}">{{g .CategoryName}}</option>
+                {{g end}}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">标签</label>
+        <div class="layui-input-block">
+            <input type="text" name="tags" required lay-verify="required" placeholder="标签 , 隔开" autocomplete="off"
+                   class="layui-input" value="php,mysql,go">
         </div>
     </div>
     <div class="layui-form-item">
@@ -13,18 +31,6 @@
         <div class="layui-input-inline" id="content">
         </div>
     </div>
-    <div class="layui-inline">
-        <label class="layui-form-label">所属栏目</label>
-        <div class="layui-input-inline">
-            <select name="category">
-                <option value="">请选择栏目</option>
-                {{g range $k,$v := .category}}
-                <option value="{{g $v.Id}}">{{g $v.CategoryName}}</option>
-                {{g end}}
-            </select>
-        </div>
-    </div>
-
     <div class="layui-form-item">
         <label class="layui-form-label">发布状态</label>
         <div class="layui-input-inline">
@@ -101,7 +107,7 @@
             //提交 Ajax 成功后，关闭当前弹层并重载表格
             common.ajax('/admin/article/create', field, function (res) {
                 console.log(res);
-                if(res.code == 0){
+                if (res.code == 0) {
                     parent.layui.table.reload('article-list'); //重载表格
                     parent.layer.close(index); //再执行关闭
                 }
