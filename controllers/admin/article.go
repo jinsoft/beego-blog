@@ -24,6 +24,16 @@ type article struct {
 
 func (c *ArticleController) Index() {
 	if c.IsAjax() {
+		//var (
+		//	title     string
+		//	aid int64
+		//	tag       string
+		//)
+		//
+		//title = c.GetString("title")
+		//aid,_ = c.GetInt64("aid")
+		//tag = c.GetString("tag")
+
 		result, count := models.GetArticleList(c.pageNumber, c.pageSize)
 		c.Data["json"] = map[string]interface{}{
 			"code":  0,
@@ -45,6 +55,7 @@ func (c *ArticleController) Create() {
 		category := strings.TrimSpace(c.GetString("category"))
 		tags := strings.TrimSpace(c.GetString("tags"))
 		status, err := c.GetInt8("status")
+		is_top, err := c.GetInt8("is_top")
 		if err != nil {
 			status = 0
 		}
@@ -88,6 +99,7 @@ func (c *ArticleController) Create() {
 		Article.Content = content
 		Article.Title = title
 		Article.Status = status
+		Article.IsTop = is_top
 		Article.Cid = category_id
 		if _, err := models.ArticleCreate(Article); err != nil {
 			c.ajaxMsg(err.Error(), MSG_ERR)

@@ -32,6 +32,12 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">复选框</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="is_top" title="置顶">
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">发布状态</label>
         <div class="layui-input-inline">
             <input type="checkbox" lay-verify="required" lay-filter="status" name="status" lay-skin="switch"
@@ -91,7 +97,6 @@
 
         form.on('submit(article-submit)', function (data) {
             var field = data.field; //获取提交的字段
-            console.log(data.field);
             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
 
             if (field.status == 'on') {
@@ -102,6 +107,13 @@
             if (field.category == '') {
                 layer.msg("请选择所属栏目")
                 return false;
+            }
+            if (typeof (field.is_top) == 'undefined') {
+                field.is_top = 0
+            } else if (field.is_top == 'on') {
+                field.is_top = 1;
+            } else {
+                field.is_top = 0;
             }
 
             //提交 Ajax 成功后，关闭当前弹层并重载表格

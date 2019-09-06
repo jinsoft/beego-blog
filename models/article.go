@@ -13,6 +13,7 @@ type Article struct {
 	Views       int64     `json:"views"`
 	Comments    int64     `json:"comments"`
 	Status      int8      `json:"status"`
+	IsTop       int8      `json:"is_top"`
 	CreatedTime time.Time `json:"created_time"`
 	Cid         int
 }
