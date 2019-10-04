@@ -21,15 +21,15 @@
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">文章标签</label>
+                    <label class="layui-form-label">文章分类</label>
                     <div class="layui-input-inline">
-                        <select name="label">
+                        <select name="category">
                             <option value="">请选择标签</option>
-                            <option value="0">美食</option>
-                            <option value="1">新闻</option>
-                            <option value="2">八卦</option>
-                            <option value="3">体育</option>
-                            <option value="4">音乐</option>
+                            <option value="1">美食</option>
+                            <option value="2">新闻</option>
+                            <option value="3">八卦</option>
+                            <option value="4">体育</option>
+                            <option value="5">音乐</option>
                         </select>
                     </div>
                 </div>
@@ -48,17 +48,26 @@
             </div>
             <table id="article-list" lay-filter="article-list"></table>
             <script type="text/html" id="buttonTpl">
-                {{#  if(d.status){ }}
+                {{#  if(d.status == 1){ }}
                 <button class="layui-btn layui-btn-xs">已发布</button>
-                {{#  } else { }}
-                <button class="layui-btn layui-btn-primary layui-btn-xs">待修改</button>
-                {{#  } }}
+                {{#  } else if(d.status == 0){ }}
+                <button class="layui-btn layui-btn-primary layui-btn-xs">待发布</button>
+                {{#  } else if(d.status == 2){}}
+                <button class="layui-btn layui-btn-danger layui-btn-xs">已删除</button>
+                {{#  }}}
             </script>
             <script type="text/html" id="table-content-list">
                 <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
                             class="layui-icon layui-icon-edit"></i>编辑</a>
+                {{# if(d.status == 0){ }}
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                            class="layui-icon layui-icon-delete"></i>发布</a>
+                {{# }else if(d.status == 1){ }}
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
                             class="layui-icon layui-icon-delete"></i>删除</a>
+                {{# }else if(d.status == 2){ }}
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">恢复</a>
+                {{# } }}
             </script>
         </div>
     </div>

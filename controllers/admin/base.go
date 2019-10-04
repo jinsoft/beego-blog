@@ -19,6 +19,7 @@ type baseController struct {
 	clientIp       string
 	pageNumber     int
 	pageSize       int
+	offset         int
 }
 
 func (c *baseController) Prepare() {
@@ -41,6 +42,7 @@ func (c *baseController) Prepare() {
 	} else {
 		c.pageSize = limit
 	}
+	c.offset = (c.pageNumber - 1) * c.pageSize
 }
 
 func (c *baseController) auth() {

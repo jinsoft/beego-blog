@@ -33,13 +33,51 @@ func (c *ArticleController) Index() {
 		//title = c.GetString("title")
 		//aid,_ = c.GetInt64("aid")
 		//tag = c.GetString("tag")
+		var (
+			list    []*models.Article
+			article models.Article
+		)
 
-		result, count := models.GetArticleList(c.pageNumber, c.pageSize)
+		articleid, _ := c.GetInt64("article_id")
+
+		if articleid != 0 {
+			article.Query().Filter("id", articleid).One(&article)
+		}
+
+		query := article.Query()
+		count, _ := query.Count()
+		if count > 0 {
+			query.OrderBy("-istop", "-id").Limit(c.pageSize, c.offset).RelatedSel().All(&list)
+		}
+
+		data := make(map[int]interface{})
+		for k, v := range list {
+			row := make(map[string]interface{})
+			row["id"] = v.Id
+			row["title"] = v.Title
+			row["content"] = v.Content
+			row["comments"] = v.Comments
+			row["views"] = v.Views
+			row["is_top"] = v.IsTop
+			row["status"] = v.Status
+			row["is_top"] = v.IsTop
+			row["category_name"] = v.Category.CategoryName
+			if v.UpdatedTime.IsZero() {
+				row["updated_time"] = "-"
+			} else {
+				row["updated_time"] = v.UpdatedTime.Format("2006-01-02 15:04")
+			}
+			row["created_time"] = v.CreatedTime.Format("2006-01-02 15:04")
+			data[k] = row
+		}
+
+		//result, count := models.GetArticleList(c.pageNumber, c.pageSize)
+
 		c.Data["json"] = map[string]interface{}{
 			"code":  0,
 			"msg":   "请求成功",
 			"count": count,
-			"data":  result,
+			"data":  data,
 		}
 		c.ServeJSON()
 		c.StopRun()
@@ -59,7 +97,7 @@ func (c *ArticleController) Create() {
 		if err != nil {
 			status = 0
 		}
-		category_id, _ := strconv.Atoi(category)
+		category_id, _ := strconv.ParseInt(category, 0, 64)
 
 		addTags := make([]string, 0)
 		// 标签过滤
@@ -95,12 +133,13 @@ func (c *ArticleController) Create() {
 		}
 
 		Article := new(models.Article)
-		Article.Uid = c.uid
+		//Article.User = &models.Users{Id: c.userid}
 		Article.Content = content
 		Article.Title = title
 		Article.Status = status
 		Article.IsTop = is_top
-		Article.Cid = category_id
+		//Article.CategoryId = category_id
+		Article.Category = &models.Category{Id: category_id}
 		if _, err := models.ArticleCreate(Article); err != nil {
 			c.ajaxMsg(err.Error(), MSG_ERR)
 		}

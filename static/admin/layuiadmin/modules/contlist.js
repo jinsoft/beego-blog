@@ -5,11 +5,22 @@
         elem: "#article-list",
         url: "/admin/article/index",
         cols: [[
-            {type: "checkbox", fixed: "left"}, {field: "id", width: 100, title: "文章ID", sort: !0},
-            {field: "label", title: "文章标签", minWidth: 100},
-            {field: "title", title: "文章标题"}, {field: "author", title: "作者"},
-            {field: "create_time", title: "上传时间", sort: !0},
-            {field: "status", title: "发布状态", templet: "#buttonTpl", minWidth: 80, align: "center"},
+            {type: "checkbox", fixed: "left"},
+            {field: "id", width: 100, title: "文章ID", sort: !0},
+            {field: "title", title: "文章标题"},
+            {field: "category_name", title: "文章分类", minWidth: 100},
+            {field: "views", title: "uv", minWidth: 100},
+            {field: "comments", title: "评论数", minWidth: 100},
+            {field: "status", title: "文章状态", templet: "#buttonTpl", minWidth: 80, align: "center"},
+            {field: "is_top", title: "置顶", minWidth: 80, align: "center", templet: function(d){
+                if(d.is_top == 1){
+                    return '<button class="layui-btn layui-btn-xs layui-btn-radius layui-btn-danger"><i class=" layui-icon layui-icon-fire"></i>置顶</button>';
+                }else{
+                    return '<button class="layui-btn layui-btn-xs layui-btn-radius">未置顶</button>';
+                }
+                }},
+            {field: "created_time", title: "添加时间", sort: !0},
+            {field: "updated_time", title: "更新时间", sort: !0},
             {title: "操作", minWidth: 150, align: "center", fixed: "right", toolbar: "#table-content-list"}]],
         page: !0,
         limit: 10,

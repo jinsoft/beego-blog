@@ -6,16 +6,18 @@ import (
 )
 
 type Article struct {
-	Id          int64     `json:"id"`
-	Uid         string    `json:"uid"`
-	Title       string    `json:"title"`
-	Content     string    `json:"content"`
-	Views       int64     `json:"views"`
-	Comments    int64     `json:"comments"`
-	Status      int8      `json:"status"`
-	IsTop       int8      `json:"is_top"`
-	CreatedTime time.Time `json:"created_time"`
-	Cid         int
+	Id int64 `json:"id"`
+	//User        *Users    `orm:"rel(fk)":index;json:"uid"`
+	Title    string    `json:"title"`
+	Content  string    `json:"content"`
+	Views    int64     `json:"views"`
+	Comments int64     `json:"comments"`
+	Status   int8      `json:"status"`
+	IsTop    int8      `json:"is_top"`
+	Category *Category `orm:"rel(one)";json:"category"`
+	//CategoryId  int       `json:"category_id"`
+	CreatedTime time.Time `orm:"auto_now_add";json:"created_time"`
+	UpdatedTime time.Time `orm:"auto_now_add";json:"updated_time"`
 }
 
 func (a *Article) TableName() string {
@@ -33,4 +35,8 @@ func GetArticleList(page, pageSize int) ([]*Article, int64) {
 	total, _ := query.Count()
 	query.Limit(pageSize, offset).All(&list)
 	return list, total
+}
+
+func (m *Article) Query() orm.QuerySeter {
+	return orm.NewOrm().QueryTable(m)
 }
